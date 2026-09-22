@@ -374,6 +374,8 @@ a {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 .project-card h3 {
@@ -385,6 +387,21 @@ a {
   color: var(--text-dim);
   font-size: 0.92rem;
   margin: 0 0 16px;
+}
+
+.project-card .tags {
+  margin-bottom: 16px;
+}
+
+.card-link {
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.card-link:hover {
+  opacity: 0.75;
 }
 
 /* Contact */
