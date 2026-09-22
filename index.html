@@ -13,7 +13,7 @@
 <header class="site-header">
   <div class="container header-inner">
     <a class="logo" href="#top">KJ</a>
-    <nav class="nav">
+    <nav class="nav" id="siteNav">
       <a href="#about">About</a>
       <a href="#experience">Experience</a>
       <a href="#skills">Skills</a>
@@ -21,7 +21,14 @@
       <a href="#education">Education</a>
       <a href="#contact">Contact</a>
     </nav>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">◑</button>
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">◑</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="siteNav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
   </div>
 </header>
 
