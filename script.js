@@ -159,6 +159,7 @@
     let particles = [];
     let animId = null;
     let running = false;
+    const mouse = { x: 0, y: 0, active: false };
 
     function hexToRgba(hex, alpha) {
       const h = hex.replace('#', '').trim();
@@ -196,12 +197,24 @@
       const accentRaw = getComputedStyle(root).getPropertyValue('--accent').trim() || '#5eead4';
 
       if (!prefersReducedMotion) {
+        const mouseRadius = 170;
         for (let i = 0; i < particles.length; i++) {
           const p = particles[i];
           p.x += p.vx;
           p.y += p.vy;
           if (p.x < 0 || p.x > width) p.vx *= -1;
           if (p.y < 0 || p.y > height) p.vy *= -1;
+
+          if (mouse.active) {
+            const dx = mouse.x - p.x;
+            const dy = mouse.y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouseRadius && dist > 0.01) {
+              const pull = (1 - dist / mouseRadius) * 0.03;
+              p.x += dx * pull;
+              p.y += dy * pull;
+            }
+          }
         }
       }
 
@@ -229,6 +242,28 @@
         const p = particles[i];
         ctx.beginPath();
         ctx.arc(p.x, p.y, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (mouse.active && !prefersReducedMotion) {
+        const cursorDist = 170;
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < cursorDist) {
+            ctx.strokeStyle = hexToRgba(accentRaw, (1 - dist / cursorDist) * 0.45);
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = hexToRgba(accentRaw, 0.9);
         ctx.fill();
       }
     }
@@ -260,6 +295,18 @@
     resize();
     draw();
     window.__redrawHeroCanvas = draw;
+
+    if (!prefersReducedMotion) {
+      hero.addEventListener('pointermove', function (e) {
+        const rect = hero.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+        mouse.active = true;
+      });
+      hero.addEventListener('pointerleave', function () {
+        mouse.active = false;
+      });
+    }
 
     let resizeTimer = null;
     window.addEventListener('resize', function () {
