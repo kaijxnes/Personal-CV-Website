@@ -565,7 +565,8 @@ a {
     transition: max-height 0.2s ease;
   }
   .nav.open {
-    max-height: 320px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
   }
   .nav a {
     padding: 14px 24px;
